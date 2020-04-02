@@ -1,3 +1,4 @@
+import org.apache.commons.compress.compressors.zstandard.ZstdCompressorOutputStream;
 import wyjatki.TooManyPatientException;
 
 import java.math.BigInteger;
@@ -17,7 +18,7 @@ public class MainApp {
         patientList = apachePOIExcelRead.getPatientList();
         patientService = new PatientService(patientList);
         scanner = new Scanner(System.in);
-        System.out.println("Wybierz akcje: \n0 - Zakończ działanie \n1 - Sprawdź czy pacjent jest zarejestrowany \n2 - Zarejestruj pacjenta \n3 - Usuń pacjenta");
+        System.out.println("Wybierz akcje: \n0 - Zakończ działanie \n1 - Sprawdź czy pacjent jest zarejestrowany \n2 - Zarejestruj pacjenta \n3 - Usuń pacjenta \n4 - Zrób badanie na Koronowirusa!");
         Integer action = scanner.nextInt();
         chooseTypeSearching(action);
     }
@@ -38,10 +39,30 @@ public class MainApp {
                 break;
             case 3:
                 deletingPatient();
+                case 4:
+
+                badankonaskierowanko();
             default:
                 break;
         }
     }
+private static void badankonaskierowanko(){
+    System.out.println("podaj cene badania: ");
+    Double kwota = scanner.nextDouble();
+    for (Patient patient:patientList){
+        if (patient.getPortfel()<=kwota){
+
+            System.out.println("Pacjent: " + patient+ "Nie uzyskał badań, pieniądze nie zostały pobrane" );
+        }
+        else {
+            double temp=patient.getPortfel();
+            patient.setPortfel(temp-kwota);
+            System.out.println("gratuluje: " + patient+" zrobiłęś badania i masz wirusa !");
+        }
+
+    }
+
+}
 
     private static void deletingPatient() {
         System.out.println(patientList);

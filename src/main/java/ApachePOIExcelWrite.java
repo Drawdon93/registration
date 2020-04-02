@@ -34,13 +34,13 @@ public class ApachePOIExcelWrite {
         row.createCell(0).setCellValue("Imię");
         row.createCell(1).setCellValue("Nazwisko");
         row.createCell(2).setCellValue("Pesel");
-        row.createCell(3).setCellValue("Kwota wizyty");
+        row.createCell(3).setCellValue("posiadane pieniądze");
         for (Patient patient : patientList) {
             row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(patient.getName());
             row.createCell(1).setCellValue(patient.getSurname());
             row.createCell(2).setCellValue(patient.getPesel().toString());
-            row.createCell(3).setCellValue(patient.getPrice());
+            row.createCell(3).setCellValue(patient.getPortfel());
 
         }
     }

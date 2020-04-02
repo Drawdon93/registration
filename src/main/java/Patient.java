@@ -9,5 +9,5 @@ public class Patient {
     private String name;
     private String surname;
     private BigInteger pesel;
-    private double price;
+    private double portfel;
 }
