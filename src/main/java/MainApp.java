@@ -87,8 +87,8 @@ public class MainApp {
                 break;
             case 2:
                 System.out.println("Podaj pesel: ");
-                String pesel = scanner.next();
-                System.out.println(patientService.isRegistered(new BigInteger(pesel)));
+                BigInteger pesel = scanner.nextBigInteger();
+                System.out.println(patientService.isRegistered(pesel));
                 break;
             default:
                 break;
