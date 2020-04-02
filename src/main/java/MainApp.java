@@ -1,3 +1,5 @@
+import wyjatki.TooManyPatientException;
+
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Scanner;
@@ -7,15 +9,15 @@ public class MainApp {
     private static Scanner scanner;
     private static PatientService patientService;
     private static List<Patient> patientList;
-
-    //TODO Dopisać możliwość usunięcia z rejestru pacjenta oraz dodać pole do Pacjenta z ceną wizyty
+    private static ApachePOIExcelWrite apachePOIExcelWrite;
 
     public static void main(String[] args) {
         ApachePOIExcelRead apachePOIExcelRead = new ApachePOIExcelRead();
+        apachePOIExcelWrite = new ApachePOIExcelWrite();
         patientList = apachePOIExcelRead.getPatientList();
         patientService = new PatientService(patientList);
         scanner = new Scanner(System.in);
-        System.out.println("Wybierz akcje: \n0 - Zakończ działanie \n1 - Sprawdź czy pacjent jest zarejestrowany \n2 - Zarejestruj pacjenta");
+        System.out.println("Wybierz akcje: \n0 - Zakończ działanie \n1 - Sprawdź czy pacjent jest zarejestrowany \n2 - Zarejestruj pacjenta \n3 - Usuń pacjenta");
         Integer action = scanner.nextInt();
         chooseTypeSearching(action);
     }
@@ -28,17 +30,45 @@ public class MainApp {
                 isRegistered();
                 break;
             case 2:
-                registerPatient();
-                System.out.println("Udało się zarejestrować nowego pacjenta");
-                System.out.println(patientList);
+                try {
+                    registerPatient();
+                } catch (TooManyPatientException e) {
+                    System.out.println(e.getMessage());
+                }
                 break;
+            case 3:
+                deletingPatient();
             default:
                 break;
         }
     }
 
-    private static void registerPatient() {
-        //TODO dopisać rejestracje pacjenta
+    private static void deletingPatient() {
+        System.out.println(patientList);
+        Patient patientTemp = findPatient();
+        patientList.remove(patientTemp);
+        System.out.println(patientList);
+        apachePOIExcelWrite.createExcel(patientList);
+    }
+
+    private static void registerPatient() throws TooManyPatientException {
+        System.out.println("Podaj imię: ");
+        String name = scanner.next();
+        System.out.println("Podaj nazwisko: ");
+        String surname = scanner.next();
+        System.out.println("Podaj PESEL: ");
+        BigInteger pesel = scanner.nextBigInteger();
+        System.out.println("Podaj kwotę wizyty: ");
+        Double price = scanner.nextDouble();
+
+        if (patientService.isRegistered(pesel)){
+            throw new TooManyPatientException();
+        }
+        patientList.add(new Patient(name, surname, pesel, price));
+        apachePOIExcelWrite.createExcel(patientList);
+
+        System.out.println("Udało się zarejestrować nowego pacjenta");
+        System.out.println(patientList);
     }
 
     private static void isRegistered() {
@@ -55,7 +85,6 @@ public class MainApp {
                 String surname = scanner.next();
                 System.out.println(patientService.isRegistered(name, surname));
                 break;
-                //TODO W przypadku dopasowań więcej niż 1 rzucić użytkownikowi błąd
             case 2:
                 System.out.println("Podaj pesel: ");
                 String pesel = scanner.next();
@@ -66,5 +95,31 @@ public class MainApp {
         }
     }
 
+    private static Patient findPatient() {
+        System.out.println("Wyszukaj pacjenta po: \n0 - Zakończ działanie \n1 - imieniu i nazwisku \n2 - numerze PESEL");
+        Integer action = scanner.nextInt();
+
+        Patient patientTemp = null;
+
+        switch (action) {
+            case 0:
+                break;
+            case 1:
+                System.out.println("Podaj imię: ");
+                String name = scanner.next();
+                System.out.println("Podaj nazwisko: ");
+                String surname = scanner.next();
+                patientTemp = patientService.findPatientOrNull(name, surname);
+                break;
+            case 2:
+                System.out.println("Podaj pesel: ");
+                String pesel = scanner.next();
+                patientTemp = patientService.findPatientOrNull(new BigInteger(pesel));
+                break;
+            default:
+                break;
+        }
+        return patientTemp;
+    }
 
 }

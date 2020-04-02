@@ -11,7 +11,7 @@ public class PatientService {
     private List<Patient> patientList;
 
     public boolean isRegistered(BigInteger pesel) {
-        boolean        isRegistered = false;
+        boolean isRegistered = false;
 
         for (Patient patient : patientList) {
             if (patient.getPesel().equals(pesel)) {
@@ -31,4 +31,28 @@ public class PatientService {
         }
         return isRegistered;
     }
+
+    public Patient findPatientOrNull(String name, String surname) {
+        Patient patientTemp = null;
+
+        for (Patient patient : patientList) {
+            if (patient.getName().equals(name) && patient.getSurname().equals(surname)) {
+                patientTemp = patient;
+            }
+        }
+        return patientTemp;
+    }
+
+    public Patient findPatientOrNull(BigInteger pesel) {
+        Patient patientTemp = null;
+
+        for (Patient patient : patientList) {
+            if (patient.getPesel().equals(pesel)) {
+                patientTemp = patient;
+            }
+        }
+
+        return patientTemp;
+    }
+
 }
