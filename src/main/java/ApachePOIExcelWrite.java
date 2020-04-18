@@ -8,7 +8,7 @@ import java.util.List;
 
 public class ApachePOIExcelWrite {
 
-    private static final String FILE_NAME = "src/main/resources/Excel.xlsx";
+    private static final String FILE_NAME = "F:\\kurs\\registration Patryka\\registration\\src\\main\\resources\\Excel.xlsx";
 
     public void createExcel(List<Patient>  patientList) {
         System.out.println("Creating excel");
@@ -34,13 +34,15 @@ public class ApachePOIExcelWrite {
         row.createCell(0).setCellValue("Imię");
         row.createCell(1).setCellValue("Nazwisko");
         row.createCell(2).setCellValue("Pesel");
-        row.createCell(3).setCellValue("posiadane pieniądze");
+        row.createCell(3).setCellValue("Koronawirus");
+        row.createCell(4).setCellValue("posiadane pieniądze");
         for (Patient patient : patientList) {
             row = sheet.createRow(rowNum++);
             row.createCell(0).setCellValue(patient.getName());
             row.createCell(1).setCellValue(patient.getSurname());
             row.createCell(2).setCellValue(patient.getPesel().toString());
-            row.createCell(3).setCellValue(patient.getPortfel());
+            row.createCell(3).setCellValue(patient.getStanZdrowia());
+            row.createCell(4).setCellValue(patient.getPortfel());
 
         }
     }

@@ -3,6 +3,7 @@ import wyjatki.TooManyPatientException;
 
 import java.math.BigInteger;
 import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 public class MainApp {
@@ -39,30 +40,44 @@ public class MainApp {
                 break;
             case 3:
                 deletingPatient();
-                case 4:
+            case 4:
 
                 badankonaskierowanko();
             default:
                 break;
         }
     }
-private static void badankonaskierowanko(){
-    System.out.println("podaj cene badania: ");
-    Double kwota = scanner.nextDouble();
-    for (Patient patient:patientList){
-        if (patient.getPortfel()<=kwota){
 
-            System.out.println("Pacjent: " + patient+ "Nie uzyskał badań, pieniądze nie zostały pobrane" );
+    private static void badankonaskierowanko() {
+        System.out.println("podaj cene badania: ");
+        Double kwota = scanner.nextDouble();
+        Random random = new Random();
+        Boolean stanZdrowia = random.nextBoolean();
+
+        for (Patient patient : patientList) {
+            if (patient.getPortfel() <= kwota) {
+                patient.setStanZdrowia("brak");
+
+                System.out.println("Pacjent: " + patient + " Nie uzyskał badań, pieniądze nie zostały pobrane.");
+
+            } else {
+                double temp = patient.getPortfel();
+                patient.setPortfel(temp - kwota);
+
+                if (stanZdrowia == false) {
+                    patient.setStanZdrowia("negatywny");
+                } else {
+                    patient.setStanZdrowia("pozytywny");
+                }
+
+                System.out.println("gratuluje: " + patient + " Zrobiłeś badanie.");
+
+            }
         }
-        else {
-            double temp=patient.getPortfel();
-            patient.setPortfel(temp-kwota);
-            System.out.println("gratuluje: " + patient+" zrobiłęś badania i masz wirusa !");
-        }
+        apachePOIExcelWrite.createExcel(patientList);
+
 
     }
-
-}
 
     private static void deletingPatient() {
         System.out.println(patientList);
@@ -81,11 +96,13 @@ private static void badankonaskierowanko(){
         BigInteger pesel = scanner.nextBigInteger();
         System.out.println("Podaj kwotę wizyty: ");
         Double price = scanner.nextDouble();
+        System.out.println("Zdrowy czy chory?");
+        String stanZdrowia = scanner.next();
 
-        if (patientService.isRegistered(pesel)){
+        if (patientService.isRegistered(pesel)) {
             throw new TooManyPatientException();
         }
-        patientList.add(new Patient(name, surname, pesel, price));
+        patientList.add(new Patient(name, surname, pesel, stanZdrowia, price));
         apachePOIExcelWrite.createExcel(patientList);
 
         System.out.println("Udało się zarejestrować nowego pacjenta");
@@ -142,5 +159,5 @@ private static void badankonaskierowanko(){
         }
         return patientTemp;
     }
-
 }
+

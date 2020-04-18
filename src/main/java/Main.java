@@ -8,9 +8,9 @@ public class Main {
 
     public static void main(String[] args) {
         List<Patient> patientList = new ArrayList<>();
-        patientList.add(new Patient("Jakub", "Dąbrowski", new BigInteger("99087666341"), 123.0));
-        patientList.add(new Patient("Mikołaj", "Romanowski", new BigInteger("12345678910"), 320));
-        patientList.add(new Patient("Jan", "Kowalski", new BigInteger("82345678910"), 700));
+        patientList.add(new Patient("Jakub", "Dąbrowski", new BigInteger("99087666341"), "brak", 123));
+        patientList.add(new Patient("Mikołaj", "Romanowski", new BigInteger("12345678910"), "brak", 320));
+        patientList.add(new Patient("Jan", "Kowalski", new BigInteger("82345678910"), "brak", 700));
 
         ApachePOIExcelWrite apachePOIExcelWrite = new ApachePOIExcelWrite();
 
@@ -26,7 +26,7 @@ public class Main {
         System.out.println(patientService.isRegistered("Jakub", "Dąbrowski")); //true
 
         System.out.println("-------------------------------");
-        Patient patient = new Patient("Test", "Kowalski", new BigInteger("82345678910"), 123);
+        Patient patient = new Patient("Test", "Kowalski", new BigInteger("82345678910"), "brak", 123);
         System.out.println(patientService.isRegistered("Test", "Kowalski")); //false
 
         patientList.add(patient);
